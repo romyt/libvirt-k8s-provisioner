@@ -62,7 +62,10 @@ The user is capable of logging via SSH too.
 
 The playbook is meant to be ran against a local host or a remote host that has access to subnets that will be created, defined under **vm_host** group, depending on how many clusters you want to configure at once.
 
-First of all, you need to install required collections to get started:
+First install ansible on the client (automation machine) specify --user to avoir missing netaddr library not found error
+pip3 install --upgrade --user ansible
+
+Second of all, you need to install required collections to get started:
 
     ansible-galaxy collection install -r requirements.yml
 

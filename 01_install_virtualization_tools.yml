@@ -1,6 +1,7 @@
 ---
 - name: This play installs needed tools to provision infrastructure VMs
   hosts: vm_host
+  remote_user: romyt
   become: true
   tasks:
     - name: Manage packets when distro is 'CentOS'
