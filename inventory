@@ -1,3 +1,7 @@
 [vm_host]
+<<<<<<< HEAD
 # localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 172.24.1.225 ansible_user=romyt ansible_become=true
+=======
+localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+>>>>>>> parent of 19ab92c (initial commit)

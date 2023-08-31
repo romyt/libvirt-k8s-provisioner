@@ -1,7 +1,6 @@
 ---
 - name: Pre-flight checklist before installing k8s
   hosts: vm_host
-  remote_user: romyt
   vars_files:
     - vars/k8s_cluster.yml
   tasks:
