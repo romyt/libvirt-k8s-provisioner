@@ -1,2 +1,7 @@
 [vm_host]
+<<<<<<< HEAD
 localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+=======
+# localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
+172.24.1.225 ansible_user=romyt ansible_become=true #zabbix_agent_become_on_localhost=false
+>>>>>>> parent of fa1bf1f (personalizing variables to my baremetal env)
