@@ -1,7 +1,7 @@
 [vm_host]
 # localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
 #yalim.cloud ansible_user=romyt ansible_become=true #zabbix_agent_become_on_localhost=false
-localhost
+localhost ansible_user=romyt ansible_become=true
 
 #[proxy] # Config to use bastion host proxy
 #yalim.cloud
