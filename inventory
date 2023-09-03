@@ -1,3 +1,18 @@
 [vm_host]
 # localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python3
-172.24.1.225 ansible_user=romyt ansible_become=true #zabbix_agent_become_on_localhost=false
+#yalim.cloud ansible_user=romyt ansible_become=true #zabbix_agent_become_on_localhost=false
+localhost
+
+#[proxy] # Config to use bastion host proxy
+#yalim.cloud
+
+#[nodes]
+#k8s-yalim-loadbalancer
+#k8s-yalim-master-0.yalim.cloud
+#k8s-yalim-worker-0.yalim.cloud
+#k8s-yalim-worker-1.yalim.cloud
+#k8s-yalim-worker-2.yalim.cloud
+
+
+#[nodes:vars]
+#ansible_ssh_common_args='-o ProxyCommand="ssh -p 22 -W %h:%p -q romyt@yalim.cloud"'

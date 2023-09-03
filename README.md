@@ -226,3 +226,122 @@ Basic setup taken from the documentation. At the moment, the parameter **l2** re
 
 Suggestion and improvements are highly recommended!
 Alex
+
+
+
+=========================
+
+Running the Ansible playbook to create and configure virtual machines on the virtualization host 1/2
+From a root shell on the virtualization server, enter the following commands:
+
+
+ansible-playbook main.yml
+The task sequence will end with this error:
+
+
+fatal: [k8s-test-worker-0.k8s.test]: FAILED! => {"changed": false, "elapsed": 600, "msg": "timed out waiting for ping module test: Failed to connect to the host via ssh: ssh: Could not resolve hostname k8s-test-worker-0.k8s.test: Name or service not known"}
+fatal: [k8s-test-master-0.k8s.test]: FAILED! => {"changed": false, "elapsed": 600, "msg": "timed out waiting for ping module test: Failed to connect to the host via ssh: ssh: Could not resolve hostname k8s-test-master-0.k8s.test: Name or service not known"}
+Note: we will recover from this error in a later step.
+
+Preparing the virtualization server 3/3
+----------------------------------------
+From a root shell on the virtualization server, enter the following command:
+
+
+virsh net-dhcp-leases k8s-test
+Information about the virtual machines in the k8s-test network will be displayed:
+
+
+root@henderson:/home/desktop# virsh net-dhcp-leases k8s-test
+Expiry Time MAC address Protocol IP address Hostname Client ID or DUID
+2022-07-29 07:21:42 52:54:00:4a:20:99 ipv4 192.168.200.99/24 k8s-test-master-0 ff:b5:5e:67:ff:00:02:00:00:ab:11:28:1f:a1:fb:24:5c:f5:70
+2022-07-29 07:21:42 52:54:00:86:29:8f ipv4 192.168.200.28/24 k8s-test-worker-0 ff:b5:5e:67:ff:00:02:00:00:ab:11:9e:22:e1:40:72:21:cf:9d
+Take note of the IP addresses starting with 192.168.200, these values will be needed in a later configuration step.
+
+
+=========================
+Understanding the need for IP forwarding on the virtualization server
+By default, virtual machines are created with IP addresses in the 192.168.200.x subnet. This subnet is accessible within the virtualization server.
+
+In order to make the 192.168.200.x subnet accessible to the automation server, we need to create a gateway router using iptables directives on the virtualization server.
+
+In a later step, we will add a default route for the 192.168.200.x subnet on the automation server, allowing it to resolve IP addresses in that subnet.
+
+Enabling IP forwarding for the 192.168.200.x subnet
+From a root shell on the virtualization server, enter the following commands:
+
+Use the nano editor to create the following text file:
+
+cd /etc
+nano sysctl.conf
+Add the following line to the end of the sysctl.conf file:
+
+net.ipv4.ip_forward = 1
+Enter this command:
+
+sysctl -p
+Use the nano editor to create the following text file (substitute the wanadaptername and wanadapterip for those of the virtualization server in your setup):
+
+nano forward.sh
+contents:
+
+#!/usr/bin/bash
+# values
+kvmsubnet="192.168.200.0/24"
+wanadaptername="eno1"
+wanadapterip="192.168.56.60"
+kvmadaptername="k8s-test"
+kvmadapterip="192.168.200.1"
+# allow virtual adapter to accept packets from outside the host
+iptables -I FORWARD -i $wanadaptername -o $kvmadaptername -d $kvmsubnet -j ACCEPT
+iptables -I FORWARD -i $kvmadapterip -o $wanadaptername -s $kvmsubnet -j ACCEPT
+iptables --table nat --append POSTROUTING --out-interface eth1 -j MASQUERADE
+
+Enter the following commands:
+
+chmod 755 forward.sh
+bash forward.sh
+Note: add invocation to /etc/rc.local for persistence.
+
+Preparing the automation server 2/2
+Adding IP addresses for the VM hosts created in “Preparing the virtualization server 3/3”
+From a root shell on the automation server, enter the following commands:
+
+Use the nano editor to create the following text file:
+
+cd /etc
+nano sysctl.conf
+Add the following line to the end of the sysctl.conf file:
+
+net.ipv4.ip_forward = 1
+Enter this command:
+
+sysctl -p
+Use the nano editor to modify the /etc/hosts file:
+
+nano hosts
+Add the following lines (substitute the IP addresses observed earlier in “Preparing the virtualization server 3/3”):
+
+192.168.200.99 k8s-test-master-0.k8s.test
+192.168.200.28 k8s-test-worker-0.k8s.test
+Adding a route for for the 192.168.200.x subnet:
+From a root shell on the automation server, enter the following command (substitute the wanadaptername (dev) and wanadapterip for those of the virtualization server in your setup):
+
+ip route add 192.168.200.0/24 via 192.168.56.60 dev enp0s3
+Note: add invocation to /etc/rc.local for persistence.
+
+
+On Mac OS X add route
+sudo sysctl -w net.inet.ip.forwarding=1
+route -n add -net 192.168.200.0/24 172.24.1.225
+
+ansible-playbook main.yml --ask-become-pass 
+
+
+echo "rdr pass on lo0 inet proto tcp from any to self port 5432 -> 192.168.1.103 port 543
+
+rdr pass on en0 inet proto tcp from any to any port 5432 -> 192.168.1.103 port 543
+
+rdr pass on en1 inet proto tcp from any to any port 5432 -> 192.168.1.103 port 543
+
+" | sudo pfctl -ef -
