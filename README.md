@@ -345,3 +345,64 @@ rdr pass on en0 inet proto tcp from any to any port 5432 -> 192.168.1.103 port 5
 rdr pass on en1 inet proto tcp from any to any port 5432 -> 192.168.1.103 port 543
 
 " | sudo pfctl -ef -
+
+=============================================================================
+Resolving the local DNS issue in Ubuntu 22.04
+=============================================================================
+
+working within the systemd paradigm add a DNS to a link / device
+
+systemd.network manual page
+using ubuntu 17.10+ add a *.network file:
+
+sudo nano /lib/systemd/network/100-somecustom.network:
+
+100-somecustom.network ( 100 can be any number for priority, and it requires the .network file extension ):
+
+[Match]
+Name=wlo1 # the device name here
+
+[Network] # add multiple DNS 
+DNS=8.8.8.8
+DNS=208.67.222.222
+Then restart:
+
+sudo service systemd-networkd restart
+Also look into:
+
+netplan apply
+Then check:
+
+resolvectl status eno1
+
+Example of Netplan config:
+root@yalim:/home/romyt# cat /etc/netplan/00-installer-config.yaml
+# This is the network config written by 'subiquity'
+network:
+  renderer: NetworkManager
+  ethernets:
+    enp5s0:
+      dhcp4: false
+      addresses:
+      - 172.24.1.225/24
+    eno1:
+      dhcp4: false
+      addresses:
+      - 172.24.1.223/24
+      routes:
+      - to: default
+        via: 172.24.1.1
+      nameservers:
+        search: [yalim.cloud]
+        addresses: [192.168.200.1,8.8.8.8,8.8.4.4]
+  version: 2
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Final resolution:
+/etc/resolv.conf was pointing to a file not managed by Netplan
+ /etc/resolv.conf -> ../run/systemd/resolve/stub-resolv.conf
+
+ The solution:
+
+ sudo rm -f /etc/resolv.conf
+ sudo ln -sv /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
