@@ -4,7 +4,7 @@ variable "network_cidr" {
   default = ["192.168.100.0/24"]
 }
 variable "cluster_name" { default = "k8s" }
-variable "libvirt_pool_path" { default = "/var/lib/libvirt/images" }
+variable "libvirt_pool_path" { default = "/media/yalim-cloud-lv1" }
 
 provider "libvirt" {
   uri = "qemu:///system"
