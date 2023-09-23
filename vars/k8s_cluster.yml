@@ -36,10 +36,9 @@ k8s:
 
 # Rook configuration
 rook_ceph:
-  install_rook: true
+  install_rook: false
   volume_size: 50
   rook_cluster_size: 1
-  libvirt_pool: pvc1-1
 
 # Ingress controller configuration [nginx/haproxy/contour]
 
