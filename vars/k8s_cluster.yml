@@ -12,13 +12,13 @@ k8s:
     vcpu: 2
     mem: 8
     vms: 1
-    disk: 50
+    disk: 10
 
   worker_nodes:
     vcpu: 4
     mem: 8
     vms: 3
-    disk: 50
+    disk: 10
 
 
 
@@ -37,7 +37,7 @@ k8s:
 # Rook configuration
 rook_ceph:
   install_rook: false
-  volume_size: 50
+  volume_size: 10
   rook_cluster_size: 1
 
 # Ingress controller configuration [nginx/haproxy/contour]
