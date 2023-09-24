@@ -46,8 +46,8 @@ ingress_controller:
   install_ingress_controller: true
   type: nginx
   node_port:
-    http: 80 #31080
-    https: 443 #31443
+    http: 31080
+    https: 31443
 
 # Section for metalLB setup
 
