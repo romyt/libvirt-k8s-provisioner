@@ -36,7 +36,7 @@ k8s:
 
 # Rook configuration
 rook_ceph:
-  install_rook: false
+  install_rook: true
   volume_size: 10
   rook_cluster_size: 1
 
@@ -44,10 +44,10 @@ rook_ceph:
 
 ingress_controller:
   install_ingress_controller: true
-  type: haproxy
+  type: nginx
   node_port:
-    http: 31080
-    https: 31443
+    http: 80 #31080
+    https: 443 #31443
 
 # Section for metalLB setup
 
