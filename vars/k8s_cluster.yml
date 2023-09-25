@@ -44,7 +44,7 @@ rook_ceph:
 
 ingress_controller:
   install_ingress_controller: true
-  type: haproxy
+  type: nginx
   node_port:
     http: 31080
     https: 31443
