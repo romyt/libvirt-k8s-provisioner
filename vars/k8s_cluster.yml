@@ -52,6 +52,6 @@ ingress_controller:
 # Section for metalLB setup
 
 metallb:
-  install_metallb: trueß
+  install_metallb: true
   l2:
     iprange: 192.168.200.210-192.168.200.250
