@@ -37,7 +37,7 @@ k8s:
 # Rook configuration
 rook_ceph:
   install_rook: true
-  volume_size: 10
+  volume_size: 1000
   rook_cluster_size: 1
 
 # Ingress controller configuration [nginx/haproxy/contour]
@@ -52,6 +52,6 @@ ingress_controller:
 # Section for metalLB setup
 
 metallb:
-  install_metallb: true
+  install_metallb: trueß
   l2:
     iprange: 192.168.200.210-192.168.200.250
