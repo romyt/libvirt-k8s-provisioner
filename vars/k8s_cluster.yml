@@ -36,7 +36,7 @@ k8s:
 
 # Rook configuration
 rook_ceph:
-  install_rook: true
+  install_rook: false
   volume_size: 1000
   rook_cluster_size: 1
 
