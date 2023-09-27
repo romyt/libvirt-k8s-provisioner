@@ -33,11 +33,11 @@ k8s:
     cni_plugin: cilium
 
 libvirt_pool:
-  libvirt_pool_path: "/var/lib/rook/libvirt/images"
+  libvirt_pool_path: "/var/lib/libvirt/images"
 
 # Rook configuration
 rook_ceph:
-  install_rook: false
+  install_rook: true
   volume_size: 1000
   rook_cluster_size: 1
 
