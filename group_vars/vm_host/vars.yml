@@ -13,7 +13,7 @@ ubuntu_jammy:
 
 libvirt:
   storage:
-    pool_path: /var/lib/libvirt/images
+    pool_path: /var/lib/rook/libvirt/images
 
 python_packages:
   - PyYAML

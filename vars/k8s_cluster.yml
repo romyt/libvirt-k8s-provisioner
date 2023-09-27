@@ -20,7 +20,6 @@ k8s:
     vms: 3
     disk: 50
 
-
 # Network configuration
 
   network:
@@ -32,6 +31,9 @@ k8s:
 
 # Choose between [calico/flannel/cilium]
     cni_plugin: cilium
+
+libvirt_pool:
+  libvirt_pool_path: "/var/lib/rook/libvirt/images"
 
 # Rook configuration
 rook_ceph:
